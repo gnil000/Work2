@@ -20,14 +20,14 @@ namespace Work2.Controllers
         }
 
         [HttpGet]
-        [Route("GetByDep")]
+        [Route("GetByDepartment/{depName}")]
         public List<Employee> GetAllByDepartment(string depName)
         {
             return rp.GetAllByDepartmentName(depName);
         }
 
         [HttpGet]
-        [Route("GetByCom")]
+        [Route("GetByCompany/{id}")]
         public List<Employee> GetAllByCompany(int id)
         {
             return rp.GetAllByCompanyId(id);
