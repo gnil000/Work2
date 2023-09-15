@@ -9,8 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>(provider => new DepartmentRepository("Server=GNIL\\SQLEXPRESS;Initial Catalog=Work;Integrated Security=True;TrustServerCertificate=True"));
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>(provider => new EmployeeRepository("Server=GNIL\\SQLEXPRESS;Initial Catalog=Work;Integrated Security=True;TrustServerCertificate=True"));
-
 
 var app = builder.Build();
 

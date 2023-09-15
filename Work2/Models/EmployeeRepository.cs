@@ -18,10 +18,6 @@ namespace Work2.Models
             VALUES (@Type, @Number);
             SELECT SCOPE_IDENTITY();";
 
-            //string departmentSql = @"INSERT INTO Department(name, phone)
-            //VALUES (@Name, @Phone);
-            //SELECT SCOPE_IDENTITY();";
-
             string depSql = @$"
                select departmentId from Department where name = @name;
             ";
