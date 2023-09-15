@@ -2,6 +2,7 @@
 
 namespace Work2.Models
 {
+    
     public class Department
     {
         [JsonIgnore]

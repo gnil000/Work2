@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text;
 
 namespace Work2.Models
 {
@@ -129,42 +130,48 @@ namespace Work2.Models
             }
         }
 
-        public void Update(Employee emp)
+        public void Update(int id, Employee? emp)
         {
             using(IDbConnection db = new SqlConnection(conn))
-            {
-                var upF = new List<string>();
-                var param = new DynamicParameters();
-                param.Add("employeeId", emp.employeeId);
-
-                if (!string.IsNullOrEmpty(emp.Name))
+            { 
+                StringBuilder sql = new StringBuilder("UPDATE Employee SET ");
+                if(emp != null)
                 {
-                    upF.Add("Name = @Name");
-                    param.Add("Name",emp.Name);
+                    var param = new DynamicParameters();
+                    param.Add("EmployeeId", id);
+                    if (emp.Name != null)
+                    {
+                        sql.Append($"name = @Name");
+                        param.Add("Name",emp.Name);
+                    }
+                    if (emp.Passport != null)
+                    {
+                        sql.Append($", surname = @Surname");
+                        param.Add("Surname", emp.Surname);
+                    }
+                    if (emp.Phone != null)
+                    {
+                        sql.Append($", phone = @Phone");
+                        param.Add("Phone", emp.Phone);
+                    }
+                    if (emp.CompanyId > -1)
+                    {
+                        sql.Append($", companyId = @CompanyId");
+                        param.Add("CompanyId", emp.CompanyId);
+                    }
+                    if (emp.Passport != null && emp.Passport.Number!=null)
+                    {
+                        sql.Append($", passportId = (SELECT passportId FROM Passport WHERE number = @PassportNumber)");
+                        param.Add("PassportNumber", emp.Passport.Number);
+                    }
+                    if (emp.Department != null && emp.Department.Name!=null)
+                    {
+                        sql.Append($", departmentId = (SELECT departmentId FROM Department WHERE name = @DepartmentName)");
+                        param.Add("DepartmentName", emp.Department.Name);
+                    }
+                    sql.Append($" WHERE employeeId = @EmployeeId");
+                    db.Execute(sql.ToString(), param);
                 }
-                if (!string.IsNullOrEmpty(emp.Surname))
-                {
-                    upF.Add("Surname = @Surname");
-                    param.Add("Surname", emp.Surname);
-                }
-                if (!string.IsNullOrEmpty(emp.Phone))
-                {
-                    upF.Add("Phone = @Phone");
-                    param.Add("Phone", emp.Phone);
-                }
-
-                if (emp.CompanyId > -1)
-                {
-                    upF.Add("CompanyId = @CompanyId");
-                    param.Add("CompanyId", emp.CompanyId);
-                }
-
-                if (upF.Any())
-                {
-                    var sql = $"UPDATE Employee SET {string.Join(", ", upF)} WHERE employeeId = @employeeId";
-                    db.Execute(sql, param);
-                }
-
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Work2.Models;
 
 namespace Work2.Controllers
@@ -49,13 +50,13 @@ namespace Work2.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult Edit(int id, Employee emp)
+        public IActionResult Edit(int id, string json)
         {
-            var employee = rp.GetEmployee(id);
-            if(employee==null)
-                NotFound();
-            rp.Update(emp);
-            return Ok(emp);
+            if (rp.GetEmployee(id) == null)
+                return NotFound("This employee not found");
+            Employee? root = JsonConvert.DeserializeObject<Employee>(json);
+            rp.Update(id, root);
+            return Ok();
         }
 
         [HttpDelete]
