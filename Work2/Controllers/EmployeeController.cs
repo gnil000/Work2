@@ -42,9 +42,21 @@ namespace Work2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Employee emp)
+        public IActionResult Create(CreateEmployeeModel emp)
         {
-            int id = rp.Create(emp);
+            Employee employee = new Employee();
+
+            employee.Name = emp.Name;
+            employee.Surname = emp.Name;
+            employee.Phone = emp.Phone;
+            employee.CompanyId = emp.CompanyId;
+            employee.Department = new Department();
+            employee.Department.Name = emp.DepartmentName;
+            employee.Passport = new Passport();
+            employee.Passport.Type = emp.Passport.Type;
+            employee.Passport.Number = emp.Passport.Number;
+
+            int id = rp.Create(employee);
             return Ok(new { ID = id });
         }
 
